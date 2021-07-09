@@ -25,6 +25,9 @@ parser.add_argument('-i', '--ignore', nargs='+', type=str,
 # argparse receiving list of classes with specific IoU (e.g., python main.py --set-class-iou person 0.7)
 parser.add_argument('--set-class-iou', nargs='+', type=str,
                     help="set IoU for a specific class.")
+# set minoverlap for all classes
+parser.add_argument('--set-iou', nargs=1, type=float,
+                    help="set IoU for all classes.")
 args = parser.parse_args()
 
 '''
@@ -44,8 +47,10 @@ if args.ignore is None:
     args.ignore = []
 
 specific_iou_flagged = False
-if args.set_class_iou is not None:
+if args.set_class_iou:
     specific_iou_flagged = True
+elif args.set_iou:
+    MINOVERLAP = args.set_iou[0]
 
 # make sure that the cwd() is the location of the python script (so that every path makes sense)
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
